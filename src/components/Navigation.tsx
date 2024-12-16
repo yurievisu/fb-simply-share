@@ -1,9 +1,12 @@
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User, LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/components/AuthProvider";
+import { Button } from "@/components/ui/button";
 
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { user } = useAuth();
 
   const navItems = [
     { name: "Home", path: "/" },
@@ -13,7 +16,7 @@ export const Navigation = () => {
   ];
 
   return (
-    <nav className="bg-facebook text-white">
+    <nav className="bg-facebook text-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
@@ -23,18 +26,31 @@ export const Navigation = () => {
           </div>
           
           {/* Desktop menu */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
-              {navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.path}
-                  className="px-3 py-2 rounded-md text-sm font-medium hover:bg-facebook-dark transition-colors"
-                >
-                  {item.name}
-                </Link>
-              ))}
-            </div>
+          <div className="hidden md:flex md:items-center md:space-x-4">
+            {navItems.map((item) => (
+              <Link
+                key={item.name}
+                to={item.path}
+                className="px-3 py-2 rounded-md text-sm font-medium hover:bg-facebook-dark transition-colors"
+              >
+                {item.name}
+              </Link>
+            ))}
+            {user ? (
+              <Link to="/profile">
+                <Button variant="ghost" size="sm" className="text-white">
+                  <User className="h-5 w-5 mr-2" />
+                  Profile
+                </Button>
+              </Link>
+            ) : (
+              <Link to="/login">
+                <Button variant="ghost" size="sm" className="text-white">
+                  <LogIn className="h-5 w-5 mr-2" />
+                  Login
+                </Button>
+              </Link>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -63,6 +79,23 @@ export const Navigation = () => {
                 {item.name}
               </Link>
             ))}
+            {user ? (
+              <Link
+                to="/profile"
+                className="block px-3 py-2 rounded-md text-base font-medium hover:bg-facebook-dark"
+                onClick={() => setIsOpen(false)}
+              >
+                Profile
+              </Link>
+            ) : (
+              <Link
+                to="/login"
+                className="block px-3 py-2 rounded-md text-base font-medium hover:bg-facebook-dark"
+                onClick={() => setIsOpen(false)}
+              >
+                Login
+              </Link>
+            )}
           </div>
         </div>
       )}
